@@ -1,14 +1,13 @@
-package api
+package utils
 
 import (
+	"github.com/linehk/gin-blog/utils/errno"
 	"log"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
-
-	"github.com/linehk/gin-blog/errno"
 )
 
 // PageSize 每页 Article 的数量

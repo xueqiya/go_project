@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/linehk/gin-blog/model"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/linehk/gin-blog/config"
-	"github.com/linehk/gin-blog/model"
 	"github.com/linehk/gin-blog/router"
 )
 

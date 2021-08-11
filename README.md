@@ -1,52 +1,20 @@
 # gin-blog
 
-[![codecov](https://codecov.io/gh/linehk/gin-blog/branch/master/graph/badge.svg)](https://codecov.io/gh/linehk/gin-blog)
-[![Go Report Card](https://goreportcard.com/badge/github.com/linehk/gin-blog)](https://goreportcard.com/report/github.com/linehk/gin-blog)
+## 使用
 
-English | [简体中文](./README-zh.md "简体中文")
+* 标签
+  * 获取指定标签：GET `http://localhost:8888/api/v1/tags/1`
+  * 获取全部标签：GET `http://localhost:8888/api/v1/tags`
+  * 新增标签：POST `http://localhost:8888/api/v1/tags`
+  * 修改标签：PUT `http://localhost:8888/api/v1/tags/1`
+  * 删除标签：DELETE `http://localhost:8888/api/v1/tags/1`
 
-gin-blog is a simple blog RESTful API example that uses MySQL as the database.
+## 参与贡献
 
-## Installation
+如果您觉得这个项目有什么需要改进的地方，欢迎发起 Pull Request。
 
-```bash
-git clone https://github.com/linehk/gin-blog.git
-```
+如果有重大变化，请先打开一个 Issue，讨论您想要改变的内容。
 
-Then, build it:
-
-```bash
-go build -o gin-blog
-```
-
-And, run it:
-
-```bash
-./gin-blog
-```
-
-## Usages
-
-* Article
-  * get article: GET `http://localhost:8888/api/v1/articles/1`
-  * get all article: GET `http://localhost:8888/api/v1/articles`
-  * new article: POST `http://localhost:8888/api/v1/articles`, form allow to use `form-data` or `x-www-form-urlencoded` format
-  * edit article: PUT `http://localhost:8888/api/v1/articles/1`
-  * delete article: DELETE `http://localhost:8888/api/v1/articles/1`
-
-* Tag
-  * get tag: GET `http://localhost:8888/api/v1/tags/1`
-  * get all tag: GET `http://localhost:8888/api/v1/tags`
-  * new tag: POST `http://localhost:8888/api/v1/tags`
-  * edit tag: PUT `http://localhost:8888/api/v1/tags/1`
-  * delete tag: DELETE `http://localhost:8888/api/v1/tags/1`
-
-## Contributing
-
-If you feel that there is something to improve this project, please feel free to launch Pull Request.
-
-For major changes, please open an issue first to discuss what you would like to change.
-
-## License
+## 开源许可证
 
 [MIT License](./LICENSE "MIT License")

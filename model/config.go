@@ -56,7 +56,7 @@ func Setup() {
 	db.DB().SetMaxOpenConns(100)
 
 	// 自动迁移
-	db.AutoMigrate(&Article{}, &Tag{})
+	db.AutoMigrate(&Tag{})
 }
 
 func Close() {

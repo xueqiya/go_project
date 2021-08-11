@@ -9,14 +9,14 @@ type Tag struct {
 	Name string `json:"name"`
 }
 
-func GetTags(offset, limit int, cond map[string]interface{}) ([]Tag, error) {
+func GetTags(offset, limit int) ([]Tag, error) {
 	var tags []Tag
 	var err error
 	// 从 offset 开始读取 limit 条
 	if limit > 0 && offset > 0 {
-		err = db.Where(cond).Find(&tags).Offset(offset).Limit(limit).Error
+		err = db.Find(&tags).Offset(offset).Limit(limit).Error
 	} else {
-		err = db.Where(cond).Find(&tags).Error
+		err = db.Find(&tags).Error
 	}
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
@@ -58,17 +58,17 @@ func HasTagByID(id int) (bool, error) {
 	return false, nil
 }
 
-func GetTagsCount(cond map[string]interface{}) (int, error) {
+func GetTagsCount() (int, error) {
 	var count int
-	if err := db.Model(&Tag{}).Where(cond).Count(&count).Error; err != nil {
+	if err := db.Model(&Tag{}).Count(&count).Error; err != nil {
 		return 0, err
 	}
 	return count, nil
 }
 
-func AddTag(name, createdBy string, state int) error {
+func AddTag(name, createdBy string) error {
 	// 根据参数构造 tag 结构体
-	tag := Tag{Name: name, Model: Model{CreatedBy: createdBy, State: state}}
+	tag := Tag{Name: name, Model: Model{CreatedBy: createdBy}}
 	// 插入记录
 	if err := db.Create(&tag).Error; err != nil {
 		return err
