@@ -66,9 +66,9 @@ func GetTagsCount() (int, error) {
 	return count, nil
 }
 
-func AddTag(name, createdBy string) error {
+func AddTag(name string) error {
 	// 根据参数构造 tag 结构体
-	tag := Tag{Name: name, Model: Model{CreatedBy: createdBy}}
+	tag := Tag{Name: name}
 	// 插入记录
 	if err := db.Create(&tag).Error; err != nil {
 		return err

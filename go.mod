@@ -1,4 +1,4 @@
-module github.com/linehk/gin-blog
+module github.com/xueqiya/go_project
 
 go 1.12
 

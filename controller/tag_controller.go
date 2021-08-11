@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"github.com/linehk/gin-blog/model"
-	"github.com/linehk/gin-blog/utils"
-	"github.com/linehk/gin-blog/utils/errno"
+	"github.com/xueqiya/go_project/model"
+	"github.com/xueqiya/go_project/utils"
+	"github.com/xueqiya/go_project/utils/errno"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
@@ -61,9 +61,7 @@ func GetTag(c *gin.Context) {
 }
 
 type AddTagForm struct {
-	Name      string `form:"name" valid:"Required;MaxSize(100)"`
-	CreatedBy string `form:"created_by" valid:"Required;MaxSize(100)"`
-	State     int    `form:"state" valid:"Range(0,1)"`
+	Name string `form:"name" valid:"Required;MaxSize(100)"`
 }
 
 func AddTag(c *gin.Context) {
@@ -84,7 +82,7 @@ func AddTag(c *gin.Context) {
 		return
 	}
 
-	err = model.AddTag(form.Name, form.CreatedBy)
+	err = model.AddTag(form.Name)
 	if err != nil {
 		utils.Response(c, http.StatusInternalServerError, errno.AddTagFail, nil)
 		return

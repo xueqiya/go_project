@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/linehk/gin-blog/utils/errno"
+	"github.com/xueqiya/go_project/utils/errno"
 	"log"
 	"net/http"
 

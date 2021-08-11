@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/linehk/gin-blog/controller"
+	"github.com/xueqiya/go_project/controller"
 
-	"github.com/linehk/gin-blog/config"
+	"github.com/xueqiya/go_project/config"
 )
 
 func Setup() *gin.Engine {

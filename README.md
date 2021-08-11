@@ -1,4 +1,4 @@
-# gin-blog
+# go_project
 
 ## 使用
 
