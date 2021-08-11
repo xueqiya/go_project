@@ -92,10 +92,8 @@ func AddTag(c *gin.Context) {
 }
 
 type EditTagForm struct {
-	ID         int    `form:"id" valid:"Required;Min(1)"`
-	Name       string `form:"name" valid:"Required;MaxSize(100)"`
-	ModifiedBy string `form:"modified_by" valid:"Required;MaxSize(100)"`
-	State      int    `form:"state" valid:"Range(0,1)"`
+	ID   int    `form:"id" valid:"Required;Min(1)"`
+	Name string `form:"name" valid:"Required;MaxSize(100)"`
 }
 
 func EditTag(c *gin.Context) {
@@ -117,10 +115,7 @@ func EditTag(c *gin.Context) {
 		return
 	}
 
-	data := map[string]interface{}{
-		"modified_by": form.ModifiedBy,
-		"name":        form.Name,
-	}
+	data := map[string]interface{}{"name": form.Name}
 	err = model.EditTag(form.ID, data)
 	if err != nil {
 		utils.Response(c, http.StatusInternalServerError, errno.EditTagFail, nil)

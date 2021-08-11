@@ -26,7 +26,7 @@ func GetTags(offset, limit int) ([]Tag, error) {
 
 func GetTag(id int) (*Tag, error) {
 	var tag Tag
-	if err := db.Where("id = ? AND deleted_on = ?", id, 0).First(&tag).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&tag).Error; err != nil {
 		return nil, err
 	}
 	return &tag, nil
@@ -34,7 +34,7 @@ func GetTag(id int) (*Tag, error) {
 
 func HasTagByName(name string) (bool, error) {
 	var tag Tag
-	err := db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag).Error
+	err := db.Select("id").Where("name = ?", name).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -47,7 +47,7 @@ func HasTagByName(name string) (bool, error) {
 
 func HasTagByID(id int) (bool, error) {
 	var tag Tag
-	err := db.Select("id").Where("id = ? AND deleted_on = ?", id, 0).First(&tag).Error
+	err := db.Select("id").Where("id = ?", id).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -77,7 +77,7 @@ func AddTag(name string) error {
 }
 
 func EditTag(id int, data map[string]interface{}) error {
-	if err := db.Model(&Tag{}).Where("id = ? AND deleted_on = ?", id, 0).Updates(data).Error; err != nil {
+	if err := db.Model(&Tag{}).Where("id = ?", id).Updates(data).Error; err != nil {
 		return err
 	}
 	return nil
@@ -88,12 +88,4 @@ func DeleteTag(id int) error {
 		return err
 	}
 	return nil
-}
-
-func DeleteTags() (bool, error) {
-	// Unscoped 返回所有记录，包含软删除的记录
-	if err := db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{}).Error; err != nil {
-		return false, err
-	}
-	return true, nil
 }
