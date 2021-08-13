@@ -29,7 +29,6 @@ type database struct {
 	Loc          string
 	MaxIdleConns int
 	MaxOpenConns int
-	TablePrefix  string
 }
 
 var Cfg config

@@ -16,11 +16,16 @@ func Setup() *gin.Engine {
 	apiv1 := r.Group("/api/v1")
 	{
 		// tags 路由
+		apiv1.POST("/tags", controller.AddTag)
 		apiv1.GET("/tags", controller.GetTags)
 		apiv1.GET("/tags/:id", controller.GetTag)
-		apiv1.POST("/tags", controller.AddTag)
 		apiv1.PUT("/tags/:id", controller.EditTag)
 		apiv1.DELETE("/tags/:id", controller.DeleteTag)
+
+		// users 路由
+		apiv1.POST("/users", controller.AddUser)
+		apiv1.GET("/users/:id", controller.GetUser)
+		apiv1.PATCH("/users/:id", controller.EditUser)
 	}
 	return r
 }

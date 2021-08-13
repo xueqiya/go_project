@@ -6,7 +6,7 @@ import (
 	"github.com/xueqiya/go_project/utils/errno"
 	"net/http"
 
-	"github.com/astaxie/beego/validation"
+	"github.com/beego/beego/v2/core/validation"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 )
@@ -14,14 +14,14 @@ import (
 func GetTags(c *gin.Context) {
 	tags, err := model.GetTags(utils.PageNum(c), utils.PageSize)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetAllTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetAllFail, nil)
 		return
 	}
 
 	// 计数
 	count, err := model.GetTagsCount()
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.CountTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.CountFail, nil)
 		return
 	}
 
@@ -44,17 +44,17 @@ func GetTag(c *gin.Context) {
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
 		return
 	}
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.TagIsNotExist, nil)
+		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
 		return
 	}
 
 	tag, err := model.GetTag(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
 		return
 	}
 	utils.Response(c, http.StatusOK, errno.Success, tag)
@@ -74,17 +74,17 @@ func AddTag(c *gin.Context) {
 
 	exist, err := model.HasTagByName(form.Name)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
 		return
 	}
 	if exist {
-		utils.Response(c, http.StatusOK, errno.TagNameIsExisted, nil)
+		utils.Response(c, http.StatusOK, errno.IsExisted, nil)
 		return
 	}
 
 	err = model.AddTag(form.Name)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.AddTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.AddFail, nil)
 		return
 	}
 
@@ -106,19 +106,19 @@ func EditTag(c *gin.Context) {
 
 	exist, err := model.HasTagByID(form.ID)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
 		return
 	}
 
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.TagIsNotExist, nil)
+		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
 		return
 	}
 
 	data := map[string]interface{}{"name": form.Name}
 	err = model.EditTag(form.ID, data)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.EditTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.EditFail, nil)
 		return
 	}
 
@@ -137,17 +137,17 @@ func DeleteTag(c *gin.Context) {
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
 		return
 	}
 
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.TagIsNotExist, nil)
+		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
 		return
 	}
 
 	if err := model.DeleteTag(id); err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.DeleteTagFail, nil)
+		utils.Response(c, http.StatusInternalServerError, errno.DeleteFail, nil)
 		return
 	}
 

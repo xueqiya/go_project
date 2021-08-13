@@ -6,23 +6,14 @@ const (
 	Error         = 300
 	InvalidParams = 400
 
-	TagNameIsExisted  = 10001
-	GetExistedTagFail = 10002
-	TagIsNotExist     = 10003
-	GetAllTagFail     = 10004
-	CountTagFail      = 10005
-	AddTagFail        = 10006
-	EditTagFail       = 10007
-	DeleteTagFail     = 10008
-
-	ArticleIsNotExist       = 20001
-	CheckArticleIsExistFail = 20002
-	AddArticleFail          = 20003
-	DeleteArticleFail       = 20004
-	EditArticleFail         = 20005
-	CountArticleFail        = 20006
-	GetArticleListFail      = 20007
-	GetArticleFail          = 20008
+	IsExisted      = 10001
+	GetExistedFail = 10002
+	IsNotExist     = 10003
+	GetAllFail     = 10004
+	CountFail      = 10005
+	AddFail        = 10006
+	EditFail       = 10007
+	DeleteFail     = 10008
 )
 
 // 错误码对应的错误消息
@@ -31,21 +22,11 @@ var Msg = map[int]string{
 	Error:         "错误",
 	InvalidParams: "请求参数错误",
 
-	TagNameIsExisted:  "已存在该标签名称",
-	GetExistedTagFail: "获取已存在标签失败",
-	TagIsNotExist:     "该标签不存在",
-	GetAllTagFail:     "获取所有标签失败",
-	CountTagFail:      "统计标签失败",
-	AddTagFail:        "新增标签失败",
-	EditTagFail:       "修改标签失败",
-	DeleteTagFail:     "删除标签失败",
-
-	ArticleIsNotExist:       "该文章不存在",
-	CheckArticleIsExistFail: "检查文章是否存在失败",
-	AddArticleFail:          "新增文章失败",
-	DeleteArticleFail:       "删除文章失败",
-	EditArticleFail:         "修改文章失败",
-	CountArticleFail:        "统计文章失败",
-	GetArticleListFail:      "获取多个文章失败",
-	GetArticleFail:          "获取单个文章失败",
+	IsExisted:      "已存在",
+	GetExistedFail: "获取失败",
+	IsNotExist:     "不存在",
+	CountFail:      "统计失败",
+	AddFail:        "新增失败",
+	EditFail:       "修改失败",
+	DeleteFail:     "删除失败",
 }
