@@ -5,10 +5,9 @@ import (
 	"github.com/xueqiya/go_project/utils"
 	"github.com/xueqiya/go_project/utils/errno"
 	"net/http"
+	"strconv"
 
-	"github.com/beego/beego/v2/core/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/unknwon/com"
 )
 
 func GetTags(c *gin.Context) {
@@ -31,16 +30,7 @@ func GetTags(c *gin.Context) {
 }
 
 func GetTag(c *gin.Context) {
-	// 获取 id
-	id := com.StrTo(c.Param("id")).MustInt()
-	valid := validation.Validation{}
-	valid.Min(id, 1, "id")
-
-	// 表单验证错误
-	if valid.HasErrors() {
-		utils.LogErrors(valid.Errors)
-		utils.Response(c, http.StatusBadRequest, errno.InvalidParams, nil)
-	}
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {
@@ -97,7 +87,8 @@ type EditTagForm struct {
 }
 
 func EditTag(c *gin.Context) {
-	form := EditTagForm{ID: com.StrTo(c.Param("id")).MustInt()}
+	id, _ := strconv.Atoi(c.Param("id"))
+	form := EditTagForm{ID: id}
 	httpCode, errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
 		utils.Response(c, httpCode, errCode, nil)
@@ -126,14 +117,7 @@ func EditTag(c *gin.Context) {
 }
 
 func DeleteTag(c *gin.Context) {
-	valid := validation.Validation{}
-	id := com.StrTo(c.Param("id")).MustInt()
-	valid.Min(id, 1, "id").Message("ID必须大于0")
-
-	if valid.HasErrors() {
-		utils.LogErrors(valid.Errors)
-		utils.Response(c, http.StatusBadRequest, errno.InvalidParams, nil)
-	}
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {

@@ -1,13 +1,11 @@
 package utils
 
 import (
-	"github.com/beego/beego/v2/core/validation"
 	"github.com/xueqiya/go_project/utils/errno"
-	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/unknwon/com"
 )
 
 // PageSize 每页 Article 的数量
@@ -21,7 +19,7 @@ func PageNum(c *gin.Context) int {
 	// c.Query("name") == "Manu"
 	// c.Query("value") == ""
 	// c.Query("wtf") == ""
-	page := com.StrTo(c.Query("page")).MustInt()
+	page, _ := strconv.Atoi(c.Query("page"))
 	// page <= 1 时，count 为 0
 	if page > 0 {
 		// page = 2 时，count = 10
@@ -48,27 +46,7 @@ func BindAndValid(c *gin.Context, form interface{}) (int, int) {
 	err := c.Bind(form)
 	if err != nil {
 		return http.StatusBadRequest, errno.InvalidParams
-	}
-	valid := validation.Validation{}
-	// 验证该表单，必须是结构体或结构体指针
-	ok, err := valid.Valid(form)
-	if err != nil {
-		return http.StatusInternalServerError, errno.Error
-	}
-	// 验证失败
-	if !ok {
-		// LogErrors(valid.Errors)
-		for _, err := range valid.Errors {
-			log.Print(err.Key, err.Message)
-		}
-		return http.StatusBadRequest, errno.InvalidParams
-	}
-	return http.StatusOK, errno.Success
-}
-
-// LogErrors 把验证错误输出到日志
-func LogErrors(errors []*validation.Error) {
-	for _, err := range errors {
-		log.Print(err.Key, err.Message)
+	} else {
+		return http.StatusOK, errno.Success
 	}
 }

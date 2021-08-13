@@ -24,7 +24,7 @@ CREATE TABLE `user`
     `phone`       VARCHAR(11) NOT NULL DEFAULT '',
     `password`    VARCHAR(20) NOT NULL DEFAULT '',
     `nike_name`   VARCHAR(20)          DEFAULT '',
-    `age`         VARCHAR(3)           DEFAULT '0',
+    `age`         int           DEFAULT '0',
     `created_on`  int                  DEFAULT '0',
     `modified_on` int                  DEFAULT '0',
     `status`      TINYINT              DEFAULT '1',

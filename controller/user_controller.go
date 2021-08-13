@@ -5,10 +5,9 @@ import (
 	"github.com/xueqiya/go_project/utils"
 	"github.com/xueqiya/go_project/utils/errno"
 	"net/http"
+	"strconv"
 
-	"github.com/beego/beego/v2/core/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/unknwon/com"
 )
 
 type GetUserTo struct {
@@ -17,16 +16,7 @@ type GetUserTo struct {
 }
 
 func GetUser(c *gin.Context) {
-	// 获取 id
-	id := com.StrTo(c.Param("id")).MustInt()
-	valid := validation.Validation{}
-	valid.Min(id, 1, "id")
-
-	// 表单验证错误
-	if valid.HasErrors() {
-		utils.LogErrors(valid.Errors)
-		utils.Response(c, http.StatusBadRequest, errno.InvalidParams, nil)
-	}
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	exist, err := model.HasUserByID(id)
 	if err != nil {
@@ -54,10 +44,10 @@ func GetUser(c *gin.Context) {
 }
 
 type AddUserForm struct {
-	Phone    string `json:"phone" valid:"Required;Phone;Length(11)"`
-	Password string `json:"password" valid:"Required;MaxSize(20);MinSize(6)"`
-	NikeName string `json:"nike_name" valid:"Required;MaxSize(20),MinSize(2)"`
-	Age      string `json:"age" valid:"Numeric"`
+	Phone    string `json:"phone" binding:"required,len=11"`
+	Password string `json:"password" binding:"required,max=20,min=6"`
+	NikeName string `json:"nike_name" binding:"required,max=20,min=2"`
+	Age      int    `json:"age" binding:"number"`
 }
 
 func AddUser(c *gin.Context) {
@@ -88,16 +78,17 @@ func AddUser(c *gin.Context) {
 }
 
 type EditUserForm struct {
-	ID       int    `form:"id" valid:"Required;Min(1)"`
-	Phone    string `json:"phone" valid:"Phone;Length(11)"`
-	Password string `json:"password" valid:"MaxSize(20);MinSize(6)"`
-	NikeName string `json:"nike_name" valid:"MaxSize(20),MinSize(2)"`
-	Age      string `json:"age" valid:"Numeric"`
-	Status   string `json:"status" valid:"Numeric"`
+	ID       int    `json:"id" binding:"required,min=1"`
+	Phone    string `json:"phone" binding:"len=11|len=0"`
+	Password string `json:"password" binding:"max=20,min=6|len=0"`
+	NikeName string `json:"nike_name" binding:"max=20,min=2|len=0"`
+	Age      int    `json:"age" binding:"number"`
+	Status   int    `json:"status" binding:"oneof=0 1"`
 }
 
 func EditUser(c *gin.Context) {
-	form := EditUserForm{ID: com.StrTo(c.Param("id")).MustInt()}
+	id, _ := strconv.Atoi(c.Param("id"))
+	form := EditUserForm{ID: id}
 	httpCode, errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
 		utils.Response(c, httpCode, errCode, nil)
@@ -115,7 +106,7 @@ func EditUser(c *gin.Context) {
 		return
 	}
 
-	err = model.EditUser(form.ID, form.Phone, form.Password, form.NikeName, form.Age)
+	err = model.EditUser(form.ID, form.Phone, form.Password, form.NikeName, form.Age, form.Status)
 	if err != nil {
 		utils.Response(c, http.StatusInternalServerError, errno.EditFail, nil)
 		return

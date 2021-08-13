@@ -9,7 +9,7 @@ type User struct {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	NikeName string `json:"nike_name"`
-	Age      string `json:"age"`
+	Age      int    `json:"age"`
 	Status   int    `json:"status"`
 }
 
@@ -27,7 +27,6 @@ func HasUserByID(id int) (bool, error) {
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
-	// id 为正数时才表示存在
 	if user.ID > 0 {
 		return true, nil
 	}
@@ -40,26 +39,22 @@ func HasUserByPhone(phone string) (bool, error) {
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
-	// id 为正数时才表示存在
 	if user.ID > 0 {
 		return true, nil
 	}
 	return false, nil
 }
 
-func AddUser(phone, password, nikeName, age string) error {
-	// 根据参数构造 user 结构体
+func AddUser(phone, password, nikeName string, age int) error {
 	user := User{Phone: phone, Password: password, NikeName: nikeName, Age: age, Status: 1}
-
-	// 插入记录
 	if err := db.Create(&user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func EditUser(id int, phone, password, nikeName, age string) error {
-	user := User{Phone: phone, Password: password, NikeName: nikeName, Age: age, Status: 1}
+func EditUser(id int, phone, password, nikeName string, age, status int) error {
+	user := User{Phone: phone, Password: password, NikeName: nikeName, Age: age, Status: status}
 	if err := db.Model(&User{}).Where("id = ?", id).Updates(user).Error; err != nil {
 		return err
 	}
