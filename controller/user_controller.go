@@ -114,3 +114,42 @@ func EditUser(c *gin.Context) {
 
 	utils.Response(c, http.StatusOK, errno.Success, nil)
 }
+
+type LoginForm struct {
+	Phone    string `json:"phone" binding:"required,len=11"`
+	Password string `json:"password" binding:"required,max=20,min=6"`
+}
+
+func Login(c *gin.Context) {
+	var form LoginForm
+	httpCode, errCode := utils.BindAndValid(c, &form)
+	if errCode != errno.Success {
+		utils.Response(c, httpCode, errCode, nil)
+		return
+	}
+
+	exist, err := model.HasUserByPhone(form.Phone)
+	if err != nil {
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		return
+	}
+
+	if !exist {
+		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		return
+	}
+
+	user, err := model.GetUserByPhoneAndPassword(form.Phone, form.Password)
+	if err != nil {
+		utils.Response(c, http.StatusInternalServerError, errno.IsNotExist, user)
+		return
+	}
+
+	userTo := GetUserTo{User: user}
+	if err != nil {
+		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		return
+	}
+
+	utils.Response(c, http.StatusOK, errno.Success, userTo)
+}

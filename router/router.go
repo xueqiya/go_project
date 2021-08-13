@@ -26,6 +26,7 @@ func Setup() *gin.Engine {
 		apiv1.POST("/users", controller.AddUser)
 		apiv1.GET("/users/:id", controller.GetUser)
 		apiv1.PATCH("/users/:id", controller.EditUser)
+		apiv1.POST("/users/login", controller.Login)
 	}
 	return r
 }

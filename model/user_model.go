@@ -60,3 +60,11 @@ func EditUser(id int, phone, password, nikeName string, age, status int) error {
 	}
 	return nil
 }
+
+func GetUserByPhoneAndPassword(phone, password string) (*User, error) {
+	var user User
+	if err := db.Where("phone = ? And password = ?", phone, password).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
