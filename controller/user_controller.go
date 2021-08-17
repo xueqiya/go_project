@@ -4,7 +4,6 @@ import (
 	"github.com/xueqiya/go_project/model"
 	"github.com/xueqiya/go_project/utils"
 	"github.com/xueqiya/go_project/utils/errno"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -16,31 +15,35 @@ type GetUserTo struct {
 }
 
 func GetUser(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Response(c, errno.InvalidParams, nil)
+		return
+	}
 
 	exist, err := model.HasUserByID(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.IsNotExist, nil)
 		return
 	}
 
 	user, err := model.GetUser(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
 	userTo := GetUserTo{User: user}
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, userTo)
+	utils.Response(c, errno.Success, userTo)
 }
 
 type AddUserForm struct {
@@ -52,29 +55,29 @@ type AddUserForm struct {
 
 func AddUser(c *gin.Context) {
 	var form AddUserForm
-	httpCode, errCode := utils.BindAndValid(c, &form)
+	errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
-		utils.Response(c, httpCode, errCode, nil)
+		utils.Response(c, errCode, nil)
 		return
 	}
 
 	exist, err := model.HasUserByPhone(form.Phone)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 	if exist {
-		utils.Response(c, http.StatusOK, errno.IsExisted, nil)
+		utils.Response(c, errno.IsExisted, nil)
 		return
 	}
 
 	err = model.AddUser(form.Phone, form.Password, form.NikeName, form.Age)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.AddFail, nil)
+		utils.Response(c, errno.AddFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, nil)
+	utils.Response(c, errno.Success, nil)
 }
 
 type EditUserForm struct {
@@ -89,30 +92,30 @@ type EditUserForm struct {
 func EditUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	form := EditUserForm{ID: id}
-	httpCode, errCode := utils.BindAndValid(c, &form)
+	errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
-		utils.Response(c, httpCode, errCode, nil)
+		utils.Response(c, errCode, nil)
 		return
 	}
 
 	exist, err := model.HasUserByID(form.ID)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.IsNotExist, nil)
 		return
 	}
 
 	err = model.EditUser(form.ID, form.Phone, form.Password, form.NikeName, form.Age, form.Status)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.EditFail, nil)
+		utils.Response(c, errno.EditFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, nil)
+	utils.Response(c, errno.Success, nil)
 }
 
 type LoginForm struct {
@@ -122,34 +125,33 @@ type LoginForm struct {
 
 func Login(c *gin.Context) {
 	var form LoginForm
-	httpCode, errCode := utils.BindAndValid(c, &form)
+	errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
-		utils.Response(c, httpCode, errCode, nil)
+		utils.Response(c, errCode, nil)
 		return
 	}
 
 	exist, err := model.HasUserByPhone(form.Phone)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
-
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.AccountError, nil)
 		return
 	}
 
 	user, err := model.GetUserByPhoneAndPassword(form.Phone, form.Password)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.IsNotExist, user)
+		utils.Response(c, errno.PasswordError, user)
 		return
 	}
 
 	userTo := GetUserTo{User: user}
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, userTo)
+	utils.Response(c, errno.Success, userTo)
 }

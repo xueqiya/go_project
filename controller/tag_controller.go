@@ -4,7 +4,6 @@ import (
 	"github.com/xueqiya/go_project/model"
 	"github.com/xueqiya/go_project/utils"
 	"github.com/xueqiya/go_project/utils/errno"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -13,20 +12,20 @@ import (
 func GetTags(c *gin.Context) {
 	tags, err := model.GetTags(utils.PageNum(c), utils.PageSize)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetAllFail, nil)
+		utils.Response(c, errno.GetAllFail, nil)
 		return
 	}
 
 	// 计数
 	count, err := model.GetTagsCount()
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.CountFail, nil)
+		utils.Response(c, errno.CountFail, nil)
 		return
 	}
 
 	// 填充数据
 	data := map[string]interface{}{"lists": tags, "count": count}
-	utils.Response(c, http.StatusOK, errno.Success, data)
+	utils.Response(c, errno.Success, data)
 }
 
 func GetTag(c *gin.Context) {
@@ -34,20 +33,20 @@ func GetTag(c *gin.Context) {
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.IsNotExist, nil)
 		return
 	}
 
 	tag, err := model.GetTag(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
-	utils.Response(c, http.StatusOK, errno.Success, tag)
+	utils.Response(c, errno.Success, tag)
 }
 
 type AddTagForm struct {
@@ -56,29 +55,29 @@ type AddTagForm struct {
 
 func AddTag(c *gin.Context) {
 	var form AddTagForm
-	httpCode, errCode := utils.BindAndValid(c, &form)
+	errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
-		utils.Response(c, httpCode, errCode, nil)
+		utils.Response(c, errCode, nil)
 		return
 	}
 
 	exist, err := model.HasTagByName(form.Name)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 	if exist {
-		utils.Response(c, http.StatusOK, errno.IsExisted, nil)
+		utils.Response(c, errno.IsExisted, nil)
 		return
 	}
 
 	err = model.AddTag(form.Name)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.AddFail, nil)
+		utils.Response(c, errno.AddFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, nil)
+	utils.Response(c, errno.Success, nil)
 }
 
 type EditTagForm struct {
@@ -89,31 +88,31 @@ type EditTagForm struct {
 func EditTag(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	form := EditTagForm{ID: id}
-	httpCode, errCode := utils.BindAndValid(c, &form)
+	errCode := utils.BindAndValid(c, &form)
 	if errCode != errno.Success {
-		utils.Response(c, httpCode, errCode, nil)
+		utils.Response(c, errCode, nil)
 		return
 	}
 
 	exist, err := model.HasTagByID(form.ID)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.IsNotExist, nil)
 		return
 	}
 
 	data := map[string]interface{}{"name": form.Name}
 	err = model.EditTag(form.ID, data)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.EditFail, nil)
+		utils.Response(c, errno.EditFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, nil)
+	utils.Response(c, errno.Success, nil)
 }
 
 func DeleteTag(c *gin.Context) {
@@ -121,19 +120,19 @@ func DeleteTag(c *gin.Context) {
 
 	exist, err := model.HasTagByID(id)
 	if err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.GetExistedFail, nil)
+		utils.Response(c, errno.GetExistedFail, nil)
 		return
 	}
 
 	if !exist {
-		utils.Response(c, http.StatusOK, errno.IsNotExist, nil)
+		utils.Response(c, errno.IsNotExist, nil)
 		return
 	}
 
 	if err := model.DeleteTag(id); err != nil {
-		utils.Response(c, http.StatusInternalServerError, errno.DeleteFail, nil)
+		utils.Response(c, errno.DeleteFail, nil)
 		return
 	}
 
-	utils.Response(c, http.StatusOK, errno.Success, nil)
+	utils.Response(c, errno.Success, nil)
 }
