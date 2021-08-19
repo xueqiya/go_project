@@ -12,7 +12,7 @@ import (
 )
 
 type Model struct {
-	ID         int64 `gorm:"primary_key" json:"id"` // 主键，根据约定不需要
+	ID         int64 `gorm:"primary_key" json:"id"`
 	CreatedOn  int   `json:"created_on"`
 	ModifiedOn int   `json:"modified_on"`
 }
@@ -46,7 +46,7 @@ func Setup() {
 	db.DB().SetMaxOpenConns(100)
 
 	// 自动迁移
-	db.AutoMigrate(&User{}, &Tag{})
+	db.AutoMigrate(&User{}, &Goods{})
 }
 
 func Close() {

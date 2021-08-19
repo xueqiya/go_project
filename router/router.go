@@ -15,18 +15,18 @@ func Setup() *gin.Engine {
 	gin.SetMode(config.Cfg.Server.Mode)
 	apiv1 := r.Group("/api/v1")
 	{
-		// tags 路由
-		apiv1.POST("/tags", controller.AddTag)
-		apiv1.GET("/tags", controller.GetTags)
-		apiv1.GET("/tags/:id", controller.GetTag)
-		apiv1.PUT("/tags/:id", controller.EditTag)
-		apiv1.DELETE("/tags/:id", controller.DeleteTag)
-
 		// users 路由
 		apiv1.POST("/users", controller.AddUser)
 		apiv1.GET("/users/:id", controller.GetUser)
 		apiv1.PATCH("/users/:id", controller.EditUser)
 		apiv1.POST("/users/login", controller.Login)
+
+		// goods 路由
+		apiv1.GET("/goods", controller.GetAllGoods)
+		apiv1.POST("/goods", controller.AddGoods)
+		apiv1.GET("/goods/:id", controller.GetGoods)
+		//apiv1.PUT("/goods/:id", controller.EditGoods)
+		//apiv1.DELETE("/goods/:id", controller.DeleteGoods)
 	}
 	return r
 }

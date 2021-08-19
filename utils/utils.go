@@ -12,20 +12,12 @@ import (
 var PageSize = 10
 
 func PageNum(c *gin.Context) int {
-	count := 0
-	// c.Query("page") 取回 URL 中的参数，然后再转换成 Int
-	// GET /path?id=1234&name=Manu&value=
-	// c.Query("id") == "1234"
-	// c.Query("name") == "Manu"
-	// c.Query("value") == ""
-	// c.Query("wtf") == ""
+	offset := 0
 	page, _ := strconv.Atoi(c.Query("page"))
-	// page <= 1 时，count 为 0
 	if page > 0 {
-		// page = 2 时，count = 10
-		count = (page - 1) * 10
+		offset = (page - 1) * PageSize
 	}
-	return count
+	return offset
 }
 
 // Resp 统一返回格式
