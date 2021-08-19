@@ -9,11 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetUserTo struct {
-	*model.User
-	Password bool `json:"password,omitempty"`
-}
-
 func GetUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -37,13 +32,7 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	userTo := GetUserTo{User: user}
-	if err != nil {
-		utils.Response(c, errno.GetExistedFail, nil)
-		return
-	}
-
-	utils.Response(c, errno.Success, userTo)
+	utils.Response(c, errno.Success, user)
 }
 
 type AddUserForm struct {
@@ -147,11 +136,5 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	userTo := GetUserTo{User: user}
-	if err != nil {
-		utils.Response(c, errno.GetExistedFail, nil)
-		return
-	}
-
-	utils.Response(c, errno.Success, userTo)
+	utils.Response(c, errno.Success, user)
 }

@@ -16,9 +16,14 @@ type Goods struct {
 	Status      int    `json:"status"`
 }
 
-func GetAllGoods(offset, limit int) ([]Goods, error) {
-	var goods []Goods
-	var err = db.Offset(offset).Limit(limit).Find(&goods).Error
+type GoodsTo struct {
+	Goods
+	NikeName string `json:"nike_name"`
+}
+
+func GetAllGoods(offset, limit int) ([]GoodsTo, error) {
+	var goods []GoodsTo
+	var err = db.Table("goods").Select("user.nike_name,goods.*").Joins("join user on user.id = goods.fk_user_goods").Order("goods.created_on desc").Offset(offset).Limit(limit).Find(&goods).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}

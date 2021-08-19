@@ -13,9 +13,14 @@ type User struct {
 	Status   int    `json:"status"`
 }
 
-func GetUser(id int) (*User, error) {
-	var user User
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+type UserTo struct {
+	User
+	Password bool `json:"password,omitempty"`
+}
+
+func GetUser(id int) (*UserTo, error) {
+	var user UserTo
+	if err := db.Table("user").Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -61,9 +66,9 @@ func EditUser(id int, phone, password, nikeName string, age, status int) error {
 	return nil
 }
 
-func GetUserByPhoneAndPassword(phone, password string) (*User, error) {
-	var user User
-	if err := db.Where("phone = ? And password = ?", phone, password).First(&user).Error; err != nil {
+func GetUserByPhoneAndPassword(phone, password string) (*UserTo, error) {
+	var user UserTo
+	if err := db.Table("user").Where("phone = ? And password = ?", phone, password).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

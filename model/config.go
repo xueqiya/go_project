@@ -33,6 +33,8 @@ func Setup() {
 		log.Fatalf("can't open database err: %v", err)
 	}
 
+	db.LogMode(true)
+
 	// 注册回调函数
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
